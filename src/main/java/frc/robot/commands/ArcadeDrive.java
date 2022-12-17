@@ -4,27 +4,24 @@
 
 package frc.robot.commands;
 
-import java.util.function.Supplier;
-
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Drivetrain;
-
-public class TankDrive extends CommandBase {
-  // We put all the subsystems we are going to use here
+import frc.robot.subsystems.Drivetrain; 
+import java.util.function.Supplier;
+public class ArcadeDrive extends CommandBase {
   private final Drivetrain drivetrain;
 
   // We put all the fields we need for this command here
-  private final Supplier<Double> leftSpeed;
-  private final Supplier<Double> rightSpeed;
-
-  /** Creates a new TankDrive. */
-  public TankDrive(Supplier<Double> leftSpeed, Supplier<Double> rightSpeed) {
+  private final Supplier<Double> turnSpeed;
+  private final Supplier<Double> forwardSpeed;
+  /** Creates a new ArcadeDrive. */
+  public ArcadeDrive(Supplier<Double> turnSpeed, Supplier<Double> forwardSpeed) {
+    // Use addRequirements() here to declare subsystem dependencies.
     // This is how to get all the subsystems
     this.drivetrain = Drivetrain.getInstance();
 
     // We store our speed suppliers here
-    this.leftSpeed = leftSpeed;
-    this.rightSpeed = rightSpeed;
+    this.turnSpeed = turnSpeed;
+    this.forwardSpeed = forwardSpeed;
 
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(drivetrain);
@@ -32,29 +29,28 @@ public class TankDrive extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
+  public void initialize() { 
     // Start the motors at zero
-    drivetrain.tankDrive(0, 0);
+    drivetrain.arcadeDrive(0, 0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    // Update the motors at each iteration using the suppliers
-    drivetrain.tankDrive(leftSpeed.get(), rightSpeed.get());
+  public void execute() { 
+    // End by stopping the motors again
+    drivetrain.arcadeDrive(forwardSpeed.get(), turnSpeed.get());
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
+  public void end(boolean interrupted) { 
     // End by stopping the motors again
-    drivetrain.tankDrive(0, 0);
+    drivetrain.arcadeDrive(0, 0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    // Never finishes
     return false;
   }
 }
